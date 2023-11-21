@@ -9,9 +9,9 @@ import br.com.clocktimeapi.clocktimeapi.modules.users.repositories.UserRepositor
 
 @Service
 public class UserCreateService {
- 
+
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepository;  
 
     public UserEntity create(UserEntity userEntity) {
         this.userRepository

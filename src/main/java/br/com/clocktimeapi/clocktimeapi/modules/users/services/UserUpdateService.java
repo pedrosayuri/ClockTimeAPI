@@ -19,8 +19,6 @@ public class UserUpdateService {
 
         user.setNome(userEntity.getNome());
         user.setEmail(userEntity.getEmail());
-        user.setValor_hora(userEntity.getValor_hora());
-        user.setData_admissao(userEntity.getData_admissao());
         user.setUid(userEntity.getUid());
 
         return this.userRepository.save(user);

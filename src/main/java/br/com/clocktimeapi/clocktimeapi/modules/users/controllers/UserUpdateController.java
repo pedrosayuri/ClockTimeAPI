@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.clocktimeapi.clocktimeapi.exceptions.DefaultErrorDTO;
+import br.com.clocktimeapi.clocktimeapi.modules.users.dto.UserUpdateDTO;
 import br.com.clocktimeapi.clocktimeapi.modules.users.entities.UserEntity;
 import br.com.clocktimeapi.clocktimeapi.modules.users.services.UserUpdateService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,9 +23,15 @@ public class UserUpdateController {
     private UserUpdateService userUpdateService;
 
     @PutMapping("/update/{uid}")
-    public ResponseEntity<Object> update(@PathVariable String uid, @Valid @RequestBody UserEntity userEntity, HttpServletRequest request) {
+    public ResponseEntity<Object> update(@PathVariable String uid, @Valid @RequestBody UserUpdateDTO userUpdateDTO, HttpServletRequest request) {
         try { 
             var userUid = request.getAttribute("user_uid");
+
+            var userEntity = UserEntity.builder()
+                .nome(userUpdateDTO.getNome())
+                .email(userUpdateDTO.getEmail())
+                .uid(userUpdateDTO.getUid())
+                .build();
 
             if (!userUid.equals(userEntity.getUid()) || !userUid.equals(uid)) {
                 DefaultErrorDTO defaultErrorDTO = new DefaultErrorDTO("Você não tem permissão para atualizar este usuário");

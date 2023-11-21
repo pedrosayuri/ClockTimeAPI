@@ -26,7 +26,7 @@ public class JWTUserProvider {
                 .asString();
             return subject;
         } catch (JWTVerificationException exception) {
-            return "";
+            return null;
         }        
     }
 }

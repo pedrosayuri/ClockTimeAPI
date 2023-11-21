@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,24 +27,30 @@ public class SecurityUserFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
-        
-        if (header != null) {
-            var subjectToken = this.jwtUserProvider.validateToken(header);
-            if (subjectToken.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+
+        if (request.getRequestURI().contains("/users")) {
+            if (header != null) {
+                var subjectToken = this.jwtUserProvider.validateToken(header);
+                if (subjectToken == null) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
+                request.setAttribute("user_uid", subjectToken);
+                
+                // var roles = subjectToken.getClaim("roles").asList(Object.class);
+
+                // var grants = roles.stream()
+                //     .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toU))
+                //     .toList();
+
+
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
-
-            request.setAttribute("user_uid", subjectToken);
-        
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth);
         }
-
+    
         filterChain.doFilter(request, response);
     }
-
-    //faça uma função que extraia o uid do token
-
     
 }

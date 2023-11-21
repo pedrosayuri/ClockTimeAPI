@@ -2,11 +2,13 @@ package br.com.clocktimeapi.clocktimeapi.modules.login.services;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
@@ -24,6 +26,9 @@ public class AuthLoginService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder uidEncoder;
     
     public AuthLoginResponseDTO createJWTTokenLogin(AuthLoginRequestDTO authLoginRequestDTO) throws AuthenticationException {
         var login = this.userRepository.findByUid(authLoginRequestDTO.uid())
@@ -43,6 +48,7 @@ public class AuthLoginService {
                 .withClaim("uid", login.getUid())
                 .withClaim("email", login.getEmail())
                 .withClaim("nome", login.getNome())
+                .withClaim("roles", Arrays.asList("USER"))
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);
 
