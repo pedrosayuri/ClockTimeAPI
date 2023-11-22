@@ -2,7 +2,6 @@ package br.com.clocktimeapi.clocktimeapi.modules.users.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("hasRole('ADMIN') OR hasRole('USER')")
 public class UserCreateController {
 
     @Autowired
