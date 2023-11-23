@@ -1,7 +1,6 @@
 package br.com.clocktimeapi.clocktimeapi.security;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,22 +29,27 @@ public class SecurityUserFilter extends OncePerRequestFilter {
 
         if (request.getRequestURI().contains("/users")) {
             if (header != null) {
-                var subjectToken = this.jwtUserProvider.validateToken(header);
+                var subjectToken = this.jwtUserProvider.validateUidToken(header);
                 if (subjectToken == null) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }
 
+                var token = this.jwtUserProvider.validateToken(header);
+                if (token == null) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
                 request.setAttribute("user_uid", subjectToken);
-                
-                // var roles = subjectToken.getClaim("roles").asList(Object.class);
 
-                // var grants = roles.stream()
-                //     .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toU))
-                //     .toList();
+                var roles = token.getClaim("roles").asList(String.class);
+                var grants = roles.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString()))
+                    .toList();
 
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null, grants);
 
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null, Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }

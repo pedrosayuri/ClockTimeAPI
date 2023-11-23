@@ -48,7 +48,7 @@ public class AuthLoginService {
                 .withClaim("uid", login.getUid())
                 .withClaim("email", login.getEmail())
                 .withClaim("nome", login.getNome())
-                .withClaim("roles", Arrays.asList("USER"))
+                .withClaim("roles", Arrays.asList("ADMIM"))
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);
 

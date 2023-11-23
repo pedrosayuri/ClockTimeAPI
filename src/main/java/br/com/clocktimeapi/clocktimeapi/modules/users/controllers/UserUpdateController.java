@@ -2,6 +2,7 @@ package br.com.clocktimeapi.clocktimeapi.modules.users.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ public class UserUpdateController {
     private UserUpdateService userUpdateService;
 
     @PutMapping("/update/{uid}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> update(@PathVariable String uid, @Valid @RequestBody UserUpdateDTO userUpdateDTO, HttpServletRequest request) {
         try { 
             var userUid = request.getAttribute("user_uid");
