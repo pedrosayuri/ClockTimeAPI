@@ -17,13 +17,20 @@ public class SecurityConfig {
     @Autowired
     private SecurityUserFilter securityUserFilter;
 
+    private static final String[] AUTH_WHITELIST = {
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/swagger-resources/**"
+    };
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/login/").permitAll()
                 .requestMatchers("/users/create").permitAll()
-                .requestMatchers("/users/read/**").permitAll();
+                .requestMatchers("/users/read/**").permitAll()
+                .requestMatchers(AUTH_WHITELIST).permitAll();
                 
                 auth.anyRequest().authenticated();
             })
