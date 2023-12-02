@@ -17,6 +17,9 @@ public class SecurityConfig {
     @Autowired
     private SecurityUserFilter securityUserFilter;
 
+    @Autowired
+    private SecurityWorkdayFilter securityWorkdayFilter;
+
     private static final String[] AUTH_WHITELIST = {
         "/swagger-ui/**",
         "/v3/api-docs/**",
@@ -28,14 +31,16 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/login/").permitAll()
-                .requestMatchers("/users/create").permitAll()
-                .requestMatchers("/users/read/**").permitAll()
+                .requestMatchers("/employee/create").permitAll()
+                .requestMatchers("/employee/read/**").permitAll()
+                .requestMatchers("/timekeeping/create").permitAll()
                 .requestMatchers(AUTH_WHITELIST).permitAll();
                 
                 auth.anyRequest().authenticated();
             })
 
-        .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
+        .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class)
+        .addFilterBefore(securityWorkdayFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }

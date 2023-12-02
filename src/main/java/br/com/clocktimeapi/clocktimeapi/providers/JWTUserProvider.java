@@ -1,49 +1,60 @@
-package br.com.clocktimeapi.clocktimeapi.providers;
+// package br.com.clocktimeapi.clocktimeapi.providers;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+// import java.security.SignatureException;
+// import java.time.Duration;
+// import java.time.Instant;
+// import java.util.Date;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+// import org.springframework.beans.factory.annotation.Value;
+// import org.springframework.security.core.Authentication;
+// import org.springframework.stereotype.Component;
 
-@Service
-public class JWTUserProvider {
+// import com.auth0.jwt.JWT;
+// import com.auth0.jwt.algorithms.Algorithm;
+// import com.auth0.jwt.exceptions.JWTVerificationException;
 
-    @Value("${jwt.secret.login.key}")
-    private String secretUserKey;
+// import br.com.clocktimeapi.clocktimeapi.modules.user.entities.UserEntity;
+
+// @Component
+// public class JWTUserProvider {
     
-    public String validateUidToken(String token) {
-        token = token.replace("Bearer ", "");
+//     @Value("${jwt.secret.user.key}")
+//     private String secretUserKey;
 
-        Algorithm algorithm = Algorithm.HMAC256(secretUserKey);
+//     public String createJWTTokenUser(Authentication authentication) {
+//         UserEntity user = (UserEntity) authentication.getPrincipal();
 
-        try {
-            var subject = JWT.require(algorithm)
-                .build()
-                .verify(token)
-                .getClaim("uid")
-                .asString();
-            return subject;
-        } catch (JWTVerificationException exception) {
-            return null;
-        }        
-    }
+//         var expiresIn = Instant.now().plus(Duration.ofHours(24));
 
-    public DecodedJWT validateToken(String token) {
-        token = token.replace("Bearer ", "");
+//         Algorithm algorithm = Algorithm.HMAC256(secretUserKey);
 
-        Algorithm algorithm = Algorithm.HMAC256(secretUserKey);
 
-        try {
-            var tokenDecoded = JWT.require(algorithm)
-                .build()
-                .verify(token);
-            return tokenDecoded;   
-        } catch (JWTVerificationException exception) {
-            return null;
-        }
-        
-    }
-}
+//         var token = JWT.create()
+//                 .withSubject(Integer.toString(user.getId()))
+//                 .withIssuedAt(new Date())
+//                 .withExpiresAt(expiresIn)
+//                 .withClaim("roles", user.getEmployee().getJob_id())
+//                 .sign(algorithm);
+
+//     }
+
+//     public Integer getUserIdFromToken(String token) {
+//         Claims claims = Jwts.parser()
+//                 .setSigningKey(jwtSecret)
+//                 .parseClaimsJws(token)
+//                 .getBody();
+
+//         return Integer.parseInt(claims.getSubject());
+//     }
+
+//     public boolean validateToken(String authToken) {
+//         try {
+//             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+//             return true;
+//         } catch (JWTVerificationException ex) {
+//             return null;
+//         }
+//         return false;
+//     }
+
+// }
