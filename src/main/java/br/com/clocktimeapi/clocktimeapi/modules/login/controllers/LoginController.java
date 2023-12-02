@@ -1,4 +1,4 @@
-package br.com.clocktimeapi.clocktimeapi.modules.clocktime.controllers;
+package br.com.clocktimeapi.clocktimeapi.modules.login.controllers;
 
 import javax.naming.AuthenticationException;
 
@@ -11,26 +11,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.clocktimeapi.clocktimeapi.exceptions.DefaultErrorDTO;
 import br.com.clocktimeapi.clocktimeapi.exceptions.UserNotFoundException;
-import br.com.clocktimeapi.clocktimeapi.modules.clocktime.dto.ClocktimeRequestDTO;
-import br.com.clocktimeapi.clocktimeapi.modules.clocktime.dto.ClocktimeResponseDTO;
-import br.com.clocktimeapi.clocktimeapi.modules.clocktime.services.ClocktimeService;
+import br.com.clocktimeapi.clocktimeapi.modules.login.dto.LoginRequestDTO;
+import br.com.clocktimeapi.clocktimeapi.modules.login.dto.LoginResponseDTO;
+import br.com.clocktimeapi.clocktimeapi.modules.login.services.LoginService;
 
 @RestController
-@RequestMapping("/clocktime")
-public class ClocktimeController {
- 
+@RequestMapping("/login")
+public class LoginController {
+    
     @Autowired
-    private ClocktimeService loginService;
+    private LoginService loginService;
+
 
     @PostMapping("/")
-    public ResponseEntity<Object> clocktime(@RequestBody ClocktimeRequestDTO loginRequestDTO) throws AuthenticationException {
+    public ResponseEntity<Object> login(@RequestBody LoginRequestDTO loginRequestDTO) throws AuthenticationException {
         try {
-            ClocktimeResponseDTO loginResponse = loginService.login(loginRequestDTO);
+            LoginResponseDTO loginResponse = loginService.login(loginRequestDTO);
             return ResponseEntity.ok().body(loginResponse);
         } catch (UserNotFoundException e) {
             DefaultErrorDTO defaultErrorDTO = new DefaultErrorDTO(e.getMessage());
             return ResponseEntity.badRequest().body(defaultErrorDTO);
         }
     }
-
 }

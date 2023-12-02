@@ -14,7 +14,6 @@ import br.com.clocktimeapi.clocktimeapi.providers.JWTWorkdayProvider;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.UUID;
 
 @Service
 public class TimekeepingCheckInService {
@@ -31,7 +30,7 @@ public class TimekeepingCheckInService {
     public TimekeepingEntity checkIn(String token, TimekeepingEntity workdayEntity) {
         DecodedJWT decodedJWT = jwtWorkdayProvider.validateToken(token);
         
-        String userIdFromToken = decodedJWT.getSubject();
+        // String userIdFromToken = decodedJWT.getSubject();
         LocalDateTime dataEntrada = LocalDateTime.ofInstant(
             decodedJWT.getIssuedAt().toInstant(), ZoneId.systemDefault());
 
