@@ -28,7 +28,7 @@ public class SecurityClocktimeFilter extends OncePerRequestFilter {
         
         String header = request.getHeader("Authorization");
 
-        if (request.getRequestURI().contains("/timekeeping")) {
+        if (request.getRequestURI().contains("/timekeeping") || request.getRequestURI().contains("/payroll")) {
             if (header != null) {
                 var clocktimeToken = this.jwtClocktimeProvider.validateClocktimeToken(header);
                 if (clocktimeToken == null) {

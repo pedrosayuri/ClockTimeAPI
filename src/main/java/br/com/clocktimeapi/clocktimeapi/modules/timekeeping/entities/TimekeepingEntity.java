@@ -40,5 +40,4 @@ public class TimekeepingEntity {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-
 }

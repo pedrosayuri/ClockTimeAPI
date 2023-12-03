@@ -1,5 +1,6 @@
 package br.com.clocktimeapi.clocktimeapi.modules.payroll.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,7 +28,7 @@ public class PayrollEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private LocalDateTime reference_month;
+    private LocalDate reference_month;
 
     private double remuneration;
 

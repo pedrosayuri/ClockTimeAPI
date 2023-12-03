@@ -16,7 +16,6 @@ public class TimekeepingReadDTO {
     @JoinColumn(name = "employee_id", nullable = false)
     private EmployeeEntity employee;
 
-
     private LocalDateTime check_in;
 
     private LocalDateTime check_out;
