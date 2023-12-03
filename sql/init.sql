@@ -1,7 +1,9 @@
 -- ./sql/init.sql
 -- psql -h localhost -U admin -d clock_time_api -f ./sql/init.sql
 
-CREATE TABLE IF NOT EXISTS job (
+DROP TABLE IF EXISTS job cascade;
+
+CREATE TABLE job (
     id SERIAL PRIMARY KEY,
     description_job VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
