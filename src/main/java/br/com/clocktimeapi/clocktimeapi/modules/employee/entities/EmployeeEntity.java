@@ -56,5 +56,9 @@ public class EmployeeEntity {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public EmployeeEntity(int id) {
+        this.id = id;
+    }
     
 }
