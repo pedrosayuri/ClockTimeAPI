@@ -37,5 +37,4 @@ public class PayrollEntity {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
 }

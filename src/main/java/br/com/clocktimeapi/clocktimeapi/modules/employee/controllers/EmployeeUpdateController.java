@@ -24,21 +24,14 @@ public class EmployeeUpdateController {
     private EmployeeUpdateService employeeUpdateService;
 
     @PutMapping("/update/{uid}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Object> update(@PathVariable String uid, @Valid @RequestBody EmployeeUpdateDTO userUpdateDTO, HttpServletRequest request) {
+    @PreAuthorize("hasRole('ADMIN_2')")
+    public ResponseEntity<Object> update(@PathVariable String uid, @Valid @RequestBody EmployeeUpdateDTO employeeUpdateDTO, HttpServletRequest request) {
         try { 
-            var userUid = request.getAttribute("user_uid");
-
             var userEntity = EmployeeEntity.builder()
-                .name(userUpdateDTO.getNome())
-                .email(userUpdateDTO.getEmail())
-                .uid(userUpdateDTO.getUid())
+                .name(employeeUpdateDTO.getNome())
+                .email(employeeUpdateDTO.getEmail())
+                .uid(employeeUpdateDTO.getUid())
                 .build();
-
-            if (!userUid.equals(userEntity.getUid()) || !userUid.equals(uid)) {
-                DefaultErrorDTO defaultErrorDTO = new DefaultErrorDTO("Você não tem permissão para atualizar este usuário");
-                return ResponseEntity.badRequest().body(defaultErrorDTO);
-            }
 
             var result = this.employeeUpdateService.update(uid, userEntity);
             return ResponseEntity.ok().body(result);

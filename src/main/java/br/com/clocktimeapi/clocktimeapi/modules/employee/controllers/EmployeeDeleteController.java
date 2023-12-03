@@ -21,16 +21,9 @@ public class EmployeeDeleteController {
     private EmployeeDeleteService userDeleteService;
 
     @DeleteMapping("/delete/{uid}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN_2')")
     public ResponseEntity<Object> delete(@PathVariable String uid, EmployeeEntity userEntity, HttpServletRequest request) {
         try {
-            var userUid = request.getAttribute("user_uid");
-
-            if (!userUid.equals(userEntity.getUid()) || !userUid.equals(uid)) {
-                DefaultErrorDTO defaultErrorDTO = new DefaultErrorDTO("Você não tem permissão para deletar este usuário");
-                return ResponseEntity.badRequest().body(defaultErrorDTO);
-            }
-
             this.userDeleteService.delete(uid);
             return ResponseEntity.ok().build();
         } catch (Exception e) {

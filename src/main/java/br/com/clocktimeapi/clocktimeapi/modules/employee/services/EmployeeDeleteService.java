@@ -10,13 +10,13 @@ import br.com.clocktimeapi.clocktimeapi.modules.employee.repositories.EmployeeRe
 public class EmployeeDeleteService {
 
     @Autowired
-    private EmployeeRepository userRepository;
+    private EmployeeRepository empployeeRepository;
     
     public void delete(String uid) {
-        var user = this.userRepository.findByUid(uid)
+        var user = this.empployeeRepository.findByUid(uid)
             .orElseThrow(() -> new UserNotFoundException(uid));
 
-        this.userRepository.delete(user);
+        this.empployeeRepository.delete(user);
     }
 
 }

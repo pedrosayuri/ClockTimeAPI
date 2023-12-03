@@ -13,13 +13,13 @@ public class EmployeeUpdateService {
     @Autowired
     private EmployeeRepository userRepository;
     
-    public EmployeeEntity update(String uid, EmployeeEntity userEntity) {
+    public EmployeeEntity update(String uid, EmployeeEntity employeeEntity) {
         var user = this.userRepository.findByUid(uid)
                 .orElseThrow(() -> new UserNotFoundException(uid));
 
-        user.setName(userEntity.getName());
-        user.setEmail(userEntity.getEmail());
-        user.setUid(userEntity.getUid());
+        user.setName(employeeEntity.getName());
+        user.setEmail(employeeEntity.getEmail());
+        user.setUid(employeeEntity.getUid());
 
         return this.userRepository.save(user);
     }

@@ -18,7 +18,10 @@ public class SecurityConfig {
     private SecurityUserFilter securityUserFilter;
 
     @Autowired
-    private SecurityWorkdayFilter securityWorkdayFilter;
+    private SecurityLoginFilter securityLoginFilter;
+
+    // @Autowired
+    // private SecurityWorkdayFilter securityWorkdayFilter;
 
     private static final String[] AUTH_WHITELIST = {
         "/swagger-ui/**",
@@ -31,16 +34,15 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/login/").permitAll()
-                .requestMatchers("/employee/create").permitAll()
                 .requestMatchers("/employee/read/**").permitAll()
-                .requestMatchers("/timekeeping/create").permitAll()
                 .requestMatchers(AUTH_WHITELIST).permitAll();
                 
                 auth.anyRequest().authenticated();
             })
 
-        .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class)
-        .addFilterBefore(securityWorkdayFilter, BasicAuthenticationFilter.class);
+        .addFilterBefore(securityLoginFilter, BasicAuthenticationFilter.class)
+        .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
+        // .addFilterBefore(securityWorkdayFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }

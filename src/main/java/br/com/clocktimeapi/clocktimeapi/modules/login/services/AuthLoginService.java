@@ -37,11 +37,11 @@ public class AuthLoginService {
 
         var roles = "";
 
-        if (userJob.getId() != 1)
+        if (userJob.getId() == 1) {
             roles = "ADMIN_1";
-
-        if (userJob.getId() != 2)
+        } else if (userJob.getId() == 2) {
             roles = "ADMIN_2";
+        }
 
         var idMatches = login.getId().equals(authLoginRequestDTO.user_id());
         

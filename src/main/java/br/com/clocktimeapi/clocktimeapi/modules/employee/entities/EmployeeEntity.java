@@ -44,17 +44,17 @@ public class EmployeeEntity {
     private String uid;
 
     @DecimalMin(value = "0.0", inclusive = false, message = "O campo valor_hora deve ser maior que zero")
-    private double hourly_rate;
+    private Double hourly_rate;
 
     @NotNull(message = "A data de admissão não pode ser nula. Exemplo: 01/01/2023 00:00:00")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime hire_date;
 
-    @NotNull(message = "O campo job_id é obrigatório.")
     @ManyToOne
     @JoinColumn(name = "job_id", referencedColumnName = "id", nullable = false)
     private JobEntity job;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+    
 }
