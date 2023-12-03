@@ -10,7 +10,7 @@ import br.com.clocktimeapi.clocktimeapi.modules.employee.entities.EmployeeEntity
 import br.com.clocktimeapi.clocktimeapi.modules.employee.repositories.EmployeeRepository;
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.entities.TimekeepingEntity;
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.repositories.TimekeepingRepository;
-import br.com.clocktimeapi.clocktimeapi.providers.JWTTimekeepingProvider;
+import br.com.clocktimeapi.clocktimeapi.providers.JWTClocktimeProvider;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -19,35 +19,30 @@ import java.time.ZoneId;
 public class TimekeepingCheckInService {
 
     @Autowired
-    private TimekeepingRepository workdayRepository;
+    private TimekeepingRepository timekeepingRepository;
 
     @Autowired
-    private EmployeeRepository userRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    private JWTTimekeepingProvider jwtWorkdayProvider;
+    private JWTClocktimeProvider jwtClocktimeProvider;
 
-    public TimekeepingEntity checkIn(String token, TimekeepingEntity workdayEntity) {
-        DecodedJWT decodedJWT = jwtWorkdayProvider.validateToken(token);
-        
-        // String userIdFromToken = decodedJWT.getSubject();
+    public TimekeepingEntity checkIn(String token, TimekeepingEntity timekeepingEntity) {
+        DecodedJWT decodedJWT = (DecodedJWT) jwtClocktimeProvider.validateClocktimeToken(token);
+
         LocalDateTime dataEntrada = LocalDateTime.ofInstant(
             decodedJWT.getIssuedAt().toInstant(), ZoneId.systemDefault());
 
-        // Buscar informações do usuário
-        EmployeeEntity employeeEntity = userRepository.findById(2)
+        EmployeeEntity employeeEntity = employeeRepository.findByUid(decodedJWT.getClaim("uid").asString())
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        // Verificar se já existe um registro para o usuário
-        if (workdayRepository.findByEmployee_id(employeeEntity.getId()).isPresent()) {
+        if (timekeepingRepository.findByEmployee_id(employeeEntity.getId()).isPresent()) {
             throw new UserFoundException();
         }
 
-        // Configurar os detalhes da entrada
-        workdayEntity.setEmployee(employeeEntity);
-        workdayEntity.setCheck_in(dataEntrada);
+        timekeepingEntity.setEmployee(employeeEntity);
+        timekeepingEntity.setCheck_in(dataEntrada);
 
-        // Salvar o registro de entrada
-        return workdayRepository.save(workdayEntity);
+        return timekeepingRepository.save(timekeepingEntity);
     }
 }

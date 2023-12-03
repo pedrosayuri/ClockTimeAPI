@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig {
     
     @Autowired
-    private SecurityUserFilter securityUserFilter;
+    private SecurityClocktimeFilter securityClocktimeFilter;
 
     @Autowired
     private SecurityLoginFilter securityLoginFilter;
@@ -42,8 +42,7 @@ public class SecurityConfig {
             })
 
         .addFilterBefore(securityLoginFilter, BasicAuthenticationFilter.class)
-        .addFilterBefore(securityUserFilter, BasicAuthenticationFilter.class);
-        // .addFilterBefore(securityWorkdayFilter, BasicAuthenticationFilter.class);
+        .addFilterBefore(securityClocktimeFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }

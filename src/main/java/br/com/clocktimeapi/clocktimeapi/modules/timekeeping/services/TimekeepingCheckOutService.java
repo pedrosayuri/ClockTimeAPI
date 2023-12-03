@@ -9,55 +9,48 @@ import br.com.clocktimeapi.clocktimeapi.modules.employee.entities.EmployeeEntity
 import br.com.clocktimeapi.clocktimeapi.modules.employee.repositories.EmployeeRepository;
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.entities.TimekeepingEntity;
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.repositories.TimekeepingRepository;
-import br.com.clocktimeapi.clocktimeapi.providers.JWTTimekeepingProvider;
+import br.com.clocktimeapi.clocktimeapi.providers.JWTClocktimeProvider;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.UUID;
 
 @Service
 public class TimekeepingCheckOutService {
 
     @Autowired
-    private TimekeepingRepository workdayRepository;
+    private TimekeepingRepository timekeepingRepository;
 
     @Autowired
-    EmployeeRepository userRepository;
+    EmployeeRepository employeeRepository;
 
     @Autowired
-    private JWTTimekeepingProvider jwtWorkdayProvider;
+    private JWTClocktimeProvider jwtClocktimeProvider;
 
-    public TimekeepingEntity checkOut(String token, TimekeepingEntity workdayEntity) {
+    public TimekeepingEntity checkOut(String token) {
 
-        DecodedJWT decodedJWT = jwtWorkdayProvider.validateToken(token);
+        DecodedJWT decodedJWT = (DecodedJWT) jwtClocktimeProvider.validateClocktimeToken(token);
 
-        String userIdFromToken = decodedJWT.getSubject();
-        LocalDateTime dataSaida = LocalDateTime.ofInstant(
-                decodedJWT.getIssuedAt().toInstant(), ZoneId.systemDefault());
+        LocalDateTime checkOut = LocalDateTime.ofInstant(new java.util.Date().toInstant(), ZoneId.systemDefault());
 
-        System.out.println("userIdFromToken: " + UUID.fromString(userIdFromToken));
-
-        // Recupere o objeto EmployeeEntity do repositório usando o ID do usuário do token
-        EmployeeEntity employeeEntity = userRepository.findById(2)
+        EmployeeEntity employeeEntity = employeeRepository.findByUid(decodedJWT.getClaim("uid").asString())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        // Recupere o objeto TimekeepingEntity do repositório usando o ID do funcionário
-        TimekeepingEntity workday = workdayRepository.findByEmployee_id(employeeEntity.getId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        TimekeepingEntity timekeepingEntity = timekeepingRepository.findByEmployee_id(employeeEntity.getId())
+                .orElseThrow(() -> new RuntimeException("Entrada de horário não encontrada para este usuário"));
 
-        workday.setCheck_out(dataSaida);
+        if (timekeepingEntity.getCheck_out() != null) {
+            throw new RuntimeException("Check-out já registrado para este usuário");
+        }
 
-        // Atribua o objeto EmployeeEntity ao campo employee
-        workdayEntity.setEmployee(employeeEntity);
-        workdayEntity.setCheck_out(dataSaida);
+        timekeepingEntity.setCheck_out(checkOut);
+        
+        Duration duration = Duration.between(timekeepingEntity.getCheck_in(), checkOut);
+        long minutes = duration.toMinutes();
 
-        // workdayRepository.findById(UUID.fromString(userIdFromToken)).ifPresent((workday) -> {
-        //     throw new UserFoundException();
-        // });
-
-        workdayEntity.setCheck_out(dataSaida);
-
-        return workdayRepository.save(workdayEntity);
-
+        double hours = minutes / 60.0;
+        timekeepingEntity.setWork_hours(hours);
+        return timekeepingRepository.save(timekeepingEntity);
     }
 }
+

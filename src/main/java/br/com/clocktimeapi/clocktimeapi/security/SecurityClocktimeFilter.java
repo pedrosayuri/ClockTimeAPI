@@ -1,8 +1,7 @@
 package br.com.clocktimeapi.clocktimeapi.security;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,17 +10,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.clocktimeapi.clocktimeapi.providers.JWTTimekeepingProvider;
+import br.com.clocktimeapi.clocktimeapi.providers.JWTClocktimeProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class SecurityTimekeepingFilter extends OncePerRequestFilter {
+public class SecurityClocktimeFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JWTTimekeepingProvider jwtTimekeepingProvider;
+    private JWTClocktimeProvider jwtClocktimeProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -31,26 +30,18 @@ public class SecurityTimekeepingFilter extends OncePerRequestFilter {
 
         if (request.getRequestURI().contains("/timekeeping")) {
             if (header != null) {
-                var token = this.jwtTimekeepingProvider.validateToken(header);
-                if (token == null) {
+                var clocktimeToken = this.jwtClocktimeProvider.validateClocktimeToken(header);
+                if (clocktimeToken == null) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }
 
-                var userId = token.getSubject();
-                LocalDateTime userIssuedAt = LocalDateTime.ofInstant(
-                    token.getIssuedAt().toInstant(), ZoneId.systemDefault());
+                String userUid = jwtClocktimeProvider.getUserUid(clocktimeToken);
+                String roles = jwtClocktimeProvider.getRoles(clocktimeToken);
 
-                request.setAttribute("user_id", userId);
-                request.setAttribute("user_issued_at", userIssuedAt);
-
-                var userRoles = token.getClaim("roles").asList(String.class);
-
-                var userGrants = userRoles.stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString()))
-                    .toList();
+                var grants = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + roles));
             
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token, null, userGrants);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userUid, null, grants);
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
@@ -58,5 +49,4 @@ public class SecurityTimekeepingFilter extends OncePerRequestFilter {
         
         filterChain.doFilter(request, response);
     }
-    
 }

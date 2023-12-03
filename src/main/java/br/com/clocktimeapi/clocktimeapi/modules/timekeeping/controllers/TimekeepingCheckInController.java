@@ -2,6 +2,7 @@ package br.com.clocktimeapi.clocktimeapi.modules.timekeeping.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class TimekeepingCheckInController {
     private TimekeepingCheckInService timekeepingCheckInService;
 
     @PostMapping("/check/in")
+    @PreAuthorize("hasRole('ADMIN_1') or hasRole('ADMIN_2') or hasRole('WORKER_1') or hasRole('WORK2')")
     public ResponseEntity<Object> checkIn(@RequestHeader("Authorization") String token) {
         try {
             TimekeepingEntity timekeepingEntity = new TimekeepingEntity();
