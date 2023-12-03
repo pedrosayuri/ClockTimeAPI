@@ -45,15 +45,8 @@ public class PayrollService {
 
         TimekeepingEntity timekeepingEntity = timekeepingEntityOptional.get();
         LocalDateTime checkIn = timekeepingEntity.getCheck_in();
-        LocalDateTime checkOut = timekeepingEntity.getCheck_out();
 
-        long hoursWorked = java.time.Duration.between(checkIn, checkOut).toHours();
-
-        if (hoursWorked <= 160) {
-            payrollEntity.setRemuneration(hoursWorked * 10);
-        } else {
-            payrollEntity.setRemuneration(hoursWorked * 15);
-        }
+        payrollEntity.setRemuneration(employeeEntity.getHourly_rate() * timekeepingEntity.getWork_hours());
 
         payrollEntity.setReference_month(YearMonth.from(checkIn).atEndOfMonth());
 
