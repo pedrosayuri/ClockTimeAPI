@@ -36,16 +36,16 @@ public class TimekeepingCheckOutService {
         EmployeeEntity employeeEntity = employeeRepository.findByUid(decodedJWT.getClaim("uid").asString())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        TimekeepingEntity timekeepingEntity = timekeepingRepository.findByEmployee_id(employeeEntity.getId())
+        TimekeepingEntity timekeepingEntity = timekeepingRepository.findTopByEmployee_IdOrderByCheckInDesc(employeeEntity.getId())
                 .orElseThrow(() -> new RuntimeException("Entrada de horário não encontrada para este usuário"));
 
-        if (timekeepingEntity.getCheck_out() != null) {
+        if (timekeepingEntity.getCheckOut() != null) {
             throw new RuntimeException("Check-out já registrado para este usuário");
         }
 
-        timekeepingEntity.setCheck_out(checkOut);
-        
-        Duration duration = Duration.between(timekeepingEntity.getCheck_in(), checkOut);
+        timekeepingEntity.setCheckOut(checkOut);
+
+        Duration duration = Duration.between(timekeepingEntity.getCheckIn(), checkOut);
         long minutes = duration.toMinutes();
 
         double hours = minutes / 60.0;
@@ -53,4 +53,3 @@ public class TimekeepingCheckOutService {
         return timekeepingRepository.save(timekeepingEntity);
     }
 }
-

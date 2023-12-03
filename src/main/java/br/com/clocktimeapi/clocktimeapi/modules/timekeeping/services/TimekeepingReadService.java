@@ -20,8 +20,8 @@ public class TimekeepingReadService {
 
         TimekeepingReadDTO workdayReadDTO = new TimekeepingReadDTO(
             workday.getEmployee(),
-            workday.getCheck_in(),
-            workday.getCheck_out());
+            workday.getCheckIn(),
+            workday.getCheckOut());
 
         return workdayReadDTO;
     }

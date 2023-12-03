@@ -44,7 +44,7 @@ public class PayrollService {
         }
 
         TimekeepingEntity timekeepingEntity = timekeepingEntityOptional.get();
-        LocalDateTime checkIn = timekeepingEntity.getCheck_in();
+        LocalDateTime checkIn = timekeepingEntity.getCheckIn();
 
         payrollEntity.setRemuneration(employeeEntity.getHourly_rate() * timekeepingEntity.getWork_hours());
 

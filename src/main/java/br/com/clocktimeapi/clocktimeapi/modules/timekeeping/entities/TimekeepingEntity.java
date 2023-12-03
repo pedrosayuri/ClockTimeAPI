@@ -27,9 +27,9 @@ public class TimekeepingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private LocalDateTime check_in;
+    private LocalDateTime checkIn;
     
-    private LocalDateTime check_out;
+    private LocalDateTime checkOut;
 
     private Double work_hours;
 

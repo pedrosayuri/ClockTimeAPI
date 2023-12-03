@@ -8,4 +8,6 @@ import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.entities.Timekeeping
 
 public interface TimekeepingRepository extends JpaRepository<TimekeepingEntity, Integer> {
     Optional<TimekeepingEntity> findByEmployee_id(Integer employee_id);
+
+    Optional<TimekeepingEntity> findTopByEmployee_IdOrderByCheckInDesc(Integer employeeId);
 }

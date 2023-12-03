@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import br.com.clocktimeapi.clocktimeapi.exceptions.UserFoundException;
 import br.com.clocktimeapi.clocktimeapi.modules.employee.entities.EmployeeEntity;
 import br.com.clocktimeapi.clocktimeapi.modules.employee.repositories.EmployeeRepository;
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.entities.TimekeepingEntity;
@@ -36,12 +35,8 @@ public class TimekeepingCheckInService {
         EmployeeEntity employeeEntity = employeeRepository.findByUid(decodedJWT.getClaim("uid").asString())
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if (timekeepingRepository.findByEmployee_id(employeeEntity.getId()).isPresent()) {
-            throw new UserFoundException();
-        }
-
         timekeepingEntity.setEmployee(employeeEntity);
-        timekeepingEntity.setCheck_in(dataEntrada);
+        timekeepingEntity.setCheckIn(dataEntrada);
 
         return timekeepingRepository.save(timekeepingEntity);
     }
