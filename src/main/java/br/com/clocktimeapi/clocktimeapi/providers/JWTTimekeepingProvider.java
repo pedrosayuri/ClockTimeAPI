@@ -9,8 +9,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 @Service
-public class JWTWorkdayProvider {
-    
+public class JWTTimekeepingProvider {
+
+    // private static final String BEARER_PREFIX = "Bearer ";
+
     @Value("${jwt.secret.login.key}")
     private String secretWorkdayKey;
 

@@ -2,13 +2,11 @@ package br.com.clocktimeapi.clocktimeapi.modules.clocktime.services;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
 
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
@@ -25,25 +23,30 @@ public class AuthClocktimeService {
     private String secretUserKey;
 
     @Autowired
-    EmployeeRepository userRepository;
-
-    @Autowired
-    PasswordEncoder uidEncoder;
+    EmployeeRepository employeeRepository;
     
-    public AuthClocktimeResponseDTO createJWTTokenLogin(AuthClocktimeRequestDTO authLoginRequestDTO) throws AuthenticationException {
-        var login = this.userRepository.findByUid(authLoginRequestDTO.uid())
+    public AuthClocktimeResponseDTO createJWTTokenLogin(AuthClocktimeRequestDTO authClocktimeRequestDTO) throws AuthenticationException {
+        var login = this.employeeRepository.findByUid(authClocktimeRequestDTO.uid())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        var uidMatches = login.getUid().equals(authLoginRequestDTO.uid());
+        var userJob = login.getJob();
+
+        var roles = "";
+
+        if (userJob.getId() == 1) {
+            roles = "ADMIN_1";
+        } else if (userJob.getId() == 2) {
+            roles = "ADMIN_2";
+        } else if (userJob.getId() == 3) {
+            roles = "WORKER_1";
+        } else if (userJob.getId() == 4) {
+            roles = "WORKER_2";
+        }
+            
+        var uidMatches = login.getUid().equals(authClocktimeRequestDTO.uid());
         
         if (!uidMatches)
             throw new AuthenticationException();
-
-        // login.setAtivo(!login.isAtivo());
-        // userRepository.save(login);
-
-        // login.setAtivo(true);
-        // userRepository.save(login);
 
         Algorithm algorithm = Algorithm.HMAC256(secretUserKey);
         
@@ -52,19 +55,17 @@ public class AuthClocktimeService {
                 .withIssuer("auth0")
                 .withSubject(login.getId().toString())
                 .withClaim("uid", login.getUid())
+                .withClaim("roles", roles)
                 .withIssuedAt(Instant.now())
-                .withClaim("roles", Arrays.asList("USER"))
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);
 
-        var authLoginResponseDTO = AuthClocktimeResponseDTO.builder()
+        var authClocktimeResponseDTO = AuthClocktimeResponseDTO.builder()
                 .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())
                 .build();
 
-        
-
-        return authLoginResponseDTO;
+        return authClocktimeResponseDTO;
     }
 
 }

@@ -16,17 +16,17 @@ import br.com.clocktimeapi.clocktimeapi.modules.employee.repositories.EmployeeRe
 public class ClocktimeService {
     
     @Autowired
-    private EmployeeRepository userRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    private AuthClocktimeService authLoginService;
+    private AuthClocktimeService authClocktimeService;
 
-    public ClocktimeResponseDTO login(ClocktimeRequestDTO loginRequestDTO) throws AuthenticationException {
-        EmployeeEntity user = userRepository.findByUid(loginRequestDTO.getLogin())
-                .orElseThrow(() -> new UserNotFoundException(loginRequestDTO.getLogin()));
+    public ClocktimeResponseDTO login(ClocktimeRequestDTO clocktimeRequestDTO) throws AuthenticationException {
+        EmployeeEntity employeeEntity = employeeRepository.findByUid(clocktimeRequestDTO.getUid_access())
+                .orElseThrow(() -> new UserNotFoundException(clocktimeRequestDTO.getUid_access()));
 
-        AuthClocktimeRequestDTO authLoginRequestDTO = new AuthClocktimeRequestDTO(user.getUid());
-        String token = authLoginService.createJWTTokenLogin(authLoginRequestDTO).getAccess_token();
+        AuthClocktimeRequestDTO authClocktimeRequestDTO = new AuthClocktimeRequestDTO(employeeEntity.getUid());
+        String token = authClocktimeService.createJWTTokenLogin(authClocktimeRequestDTO).getAccess_token();
         return new ClocktimeResponseDTO(token);
 
     }

@@ -34,6 +34,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/login/").permitAll()
+                .requestMatchers("/clocktime/").permitAll()
                 .requestMatchers("/employee/read/**").permitAll()
                 .requestMatchers(AUTH_WHITELIST).permitAll();
                 

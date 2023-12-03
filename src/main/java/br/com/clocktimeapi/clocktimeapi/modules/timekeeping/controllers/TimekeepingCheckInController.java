@@ -12,23 +12,18 @@ import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.entities.Timekeeping
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.services.TimekeepingCheckInService;
 
 @RestController
-@RequestMapping("/workdays")
+@RequestMapping("/timekeeping")
 public class TimekeepingCheckInController {
     
     @Autowired
-    private TimekeepingCheckInService workdayCreateService;
+    private TimekeepingCheckInService timekeepingCheckInService;
 
     @PostMapping("/check/in")
     public ResponseEntity<Object> checkIn(@RequestHeader("Authorization") String token) {
         try {
-            TimekeepingEntity workdayEntity = new TimekeepingEntity();
+            TimekeepingEntity timekeepingEntity = new TimekeepingEntity();
 
-            // if (workdayEntity.getId() == null && workdayEntity.getUser_id() == null && workdayEntity.getData_entrada() == null && workdayEntity.getData_saida() == null) {
-            //     DefaultErrorDTO defaultErrorDTO = new DefaultErrorDTO("Você já está logado(a)");
-            //     return ResponseEntity.badRequest().body(defaultErrorDTO);
-            // }
-
-            var result = this.workdayCreateService.checkIn(token, workdayEntity);
+            var result = this.timekeepingCheckInService.checkIn(token, timekeepingEntity);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             DefaultErrorDTO defaultErrorDTO = new DefaultErrorDTO(e.getMessage());

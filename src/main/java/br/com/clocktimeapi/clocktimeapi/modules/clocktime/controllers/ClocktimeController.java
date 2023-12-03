@@ -20,13 +20,13 @@ import br.com.clocktimeapi.clocktimeapi.modules.clocktime.services.ClocktimeServ
 public class ClocktimeController {
  
     @Autowired
-    private ClocktimeService loginService;
+    private ClocktimeService clocktimeService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> clocktime(@RequestBody ClocktimeRequestDTO loginRequestDTO) throws AuthenticationException {
+    public ResponseEntity<Object> clocktime(@RequestBody ClocktimeRequestDTO clocktimeRequestDTO) throws AuthenticationException {
         try {
-            ClocktimeResponseDTO loginResponse = loginService.login(loginRequestDTO);
-            return ResponseEntity.ok().body(loginResponse);
+            ClocktimeResponseDTO CcocktimeResponseDTO = clocktimeService.login(clocktimeRequestDTO);
+            return ResponseEntity.ok().body(CcocktimeResponseDTO);
         } catch (UserNotFoundException e) {
             DefaultErrorDTO defaultErrorDTO = new DefaultErrorDTO(e.getMessage());
             return ResponseEntity.badRequest().body(defaultErrorDTO);

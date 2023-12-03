@@ -10,7 +10,7 @@ import br.com.clocktimeapi.clocktimeapi.modules.employee.entities.EmployeeEntity
 import br.com.clocktimeapi.clocktimeapi.modules.employee.repositories.EmployeeRepository;
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.entities.TimekeepingEntity;
 import br.com.clocktimeapi.clocktimeapi.modules.timekeeping.repositories.TimekeepingRepository;
-import br.com.clocktimeapi.clocktimeapi.providers.JWTWorkdayProvider;
+import br.com.clocktimeapi.clocktimeapi.providers.JWTTimekeepingProvider;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -25,7 +25,7 @@ public class TimekeepingCheckInService {
     private EmployeeRepository userRepository;
 
     @Autowired
-    private JWTWorkdayProvider jwtWorkdayProvider;
+    private JWTTimekeepingProvider jwtWorkdayProvider;
 
     public TimekeepingEntity checkIn(String token, TimekeepingEntity workdayEntity) {
         DecodedJWT decodedJWT = jwtWorkdayProvider.validateToken(token);

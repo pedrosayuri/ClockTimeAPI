@@ -11,17 +11,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.clocktimeapi.clocktimeapi.providers.JWTWorkdayProvider;
+import br.com.clocktimeapi.clocktimeapi.providers.JWTTimekeepingProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class SecurityWorkdayFilter extends OncePerRequestFilter {
+public class SecurityTimekeepingFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JWTWorkdayProvider jwtWorkdayProvider;
+    private JWTTimekeepingProvider jwtTimekeepingProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -29,9 +29,9 @@ public class SecurityWorkdayFilter extends OncePerRequestFilter {
         
         String header = request.getHeader("Authorization");
 
-        if (request.getRequestURI().contains("/workdays")) {
+        if (request.getRequestURI().contains("/timekeeping")) {
             if (header != null) {
-                var token = this.jwtWorkdayProvider.validateToken(header);
+                var token = this.jwtTimekeepingProvider.validateToken(header);
                 if (token == null) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;

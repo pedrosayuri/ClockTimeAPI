@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClocktimeRequestDTO {
  
-    private String login;
+    private String uid_access;
 
 }
