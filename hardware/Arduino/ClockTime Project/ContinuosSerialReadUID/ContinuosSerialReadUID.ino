@@ -89,6 +89,8 @@ void loop() {
 
   // Stop encryption on PCD
   rfid.PCD_StopCrypto1();
+
+  delay(5000);
 }
 
 
