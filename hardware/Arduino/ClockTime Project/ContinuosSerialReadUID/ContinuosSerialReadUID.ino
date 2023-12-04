@@ -52,8 +52,8 @@ void setup() {
     key.keyByte[i] = 0xFF;
   }
 
-  Serial.println(F("This code scan the MIFARE Classsic NUID."));
-  Serial.print(F("Using the following key:"));
+  Serial.print(F("This code scan the MIFARE Classsic NUID."));
+  Serial.println(F("Using the following key:"));
   printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
 }
  
