@@ -56,6 +56,7 @@
 			<Property Name="NI.SortType" Type="Int">3</Property>
 			<Item Name="test" Type="Folder">
 				<Item Name="HTTPTest.vi" Type="VI" URL="../documentation/test/HTTPTest.vi"/>
+				<Item Name="JsonFormating.vi" Type="VI" URL="../documentation/test/JsonFormating.vi"/>
 			</Item>
 			<Item Name="Message Queue.lvlib" Type="Library" URL="../support/Message Queue/Message Queue.lvlib"/>
 			<Item Name="User Event - Stop.lvlib" Type="Library" URL="../support/User Event - Stop/User Event - Stop.lvlib"/>

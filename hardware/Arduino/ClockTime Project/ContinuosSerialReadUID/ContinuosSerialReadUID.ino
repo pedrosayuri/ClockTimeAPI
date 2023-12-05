@@ -53,8 +53,8 @@ void setup() {
   }
 
   Serial.print(F("This code scan the MIFARE Classsic NUID."));
-  Serial.println(F("Using the following key:"));
-  printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
+  //Serial.println(F("Using the following key:"));
+  //printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
 }
  
 void loop() {
