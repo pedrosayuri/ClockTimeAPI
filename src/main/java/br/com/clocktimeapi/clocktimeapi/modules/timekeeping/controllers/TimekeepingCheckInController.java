@@ -20,7 +20,7 @@ public class TimekeepingCheckInController {
     private TimekeepingCheckInService timekeepingCheckInService;
 
     @PostMapping("/check/in")
-    @PreAuthorize("hasRole('ADMIN_1') or hasRole('ADMIN_2') or hasRole('WORKER_1') or hasRole('WORK2')")
+    @PreAuthorize("hasRole('ADMIN_1') or hasRole('ADMIN_2') or hasRole('WORKER_1') or hasRole('WORKER_2')")
     public ResponseEntity<Object> checkIn(@RequestHeader("Authorization") String token) {
         try {
             TimekeepingEntity timekeepingEntity = new TimekeepingEntity();
